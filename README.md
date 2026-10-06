@@ -1,6 +1,6 @@
 <div align="center">
 
-<div align="center"> <img src="assets/banner.png" alt="Arachne" width="100%" />
+<img src="assets/banner.png" alt="Arachne" width="100%" />
 
 **Replace subjective speech judging with reproducible, explainable measurements.**
 
