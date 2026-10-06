@@ -1,6 +1,6 @@
 <div align="center">
-#Arachne
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f172a,100:6366f1&height=170&section=header&text=Arachne&fontSize=60&fontColor=ffffff&desc=Contrastive%20speech%20analytics%20%26%20temporal%20flaw%20grounding&descSize=18&descAlignY=68" alt="Arachne banner" />
+
+<div align="center"> <img src="assets/banner.png" alt="Arachne" width="100%" />
 
 **Replace subjective speech judging with reproducible, explainable measurements.**
 
