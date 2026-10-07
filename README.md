@@ -216,7 +216,7 @@ This is also listed under *Built With* on the Devpost page.
 
 | Name | Role |
 |---|---|
-| mohamedfadil12, Abdude69, Ammar, Rihan | Dataset & annotation · Audio & features · Scoring & evaluation · Dashboard & submission |
+| [Fadil](https://github.com/mohamedfadil12), [Abdul](https://github.com/Abdude69), [Ammar](https://github.com/mdammar56), [Rihan](https://github.com/HABIBEEYY) | Dataset & annotation · Audio & features · Scoring & evaluation · Dashboard & submission |
 
 <div align="center">
 
