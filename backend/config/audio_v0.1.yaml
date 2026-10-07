@@ -1,0 +1,16 @@
+schema_version: "0.1"
+config_hash: "v0.1-initial"
+sample_rate: 16000
+hop_ms: 10
+aligner:
+  name: "whisperx"
+  version: "3.1.1"
+  fallback_used: false
+pitch_tracker:
+  name: "librosa_pyin"
+  version: "0.10.1"
+  fmin_hz: 50.0
+  fmax_hz: 500.0
+energy_measure:
+  type: "rms_db"
+  reference: "90th_percentile"

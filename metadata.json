@@ -1,0 +1,6 @@
+{
+  "name": "Arachne - Contrastive Speech Analytics",
+  "description": "Contrastive Speech Analytics & Temporal Flaw Grounding for Multimodal AI Hackathon 2026 Track C.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
