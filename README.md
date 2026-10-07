@@ -2,7 +2,6 @@
 
 <img src="banner.png" alt="Arachne" width="100%" />
 ![youtube](https://www.readmecodegen.com/api/social-icon?name=youtube&size=96)
-[Youtube](https://www.youtube.com/@Arachne-w8c)
 
 **Replace subjective speech judging with reproducible, explainable measurements.**
 
