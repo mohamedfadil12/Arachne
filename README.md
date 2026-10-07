@@ -2,6 +2,8 @@
 
 <img src="banner.png" alt="Arachne" width="100%" />
 
+[Youtube](https://www.youtube.com/@Arachne-w8c)
+
 **Replace subjective speech judging with reproducible, explainable measurements.**
 
 ![Track](https://img.shields.io/badge/Multimodal%20AI%20Hackathon%202026-Track%20C-6366f1?style=for-the-badge)
