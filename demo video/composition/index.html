@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1920, height=1080" />
+  <title>Arachne — Contrastive Speech Analytics</title>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #001726; }
+    body { color: #f8fafc; font-family: Inter, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+    #root { width: 100%; height: 100%; position: relative; overflow: hidden; background: radial-gradient(ellipse at 50% 48%, #0b3141 0%, #002238 48%, #001726 100%); }
+    .scene { position: absolute; inset: 0; width: 100%; height: 100%; padding: 100px 150px; overflow: hidden; }
+    .serif { font-family: 'EB Garamond', Georgia, serif; font-weight: 400; letter-spacing: -0.035em; }
+    .eyebrow { color: #90a4b4; text-transform: uppercase; letter-spacing: .2em; font-size: 18px; font-weight: 600; }
+    .muted { color: #91a4b3; }
+    .amber { color: #f8bd58; }
+    .cyan { color: #67c7ee; }
+    .panel { background: rgba(4, 20, 32, .88); border: 1px solid rgba(204, 226, 240, .16); border-radius: 24px; box-shadow: 0 30px 90px rgba(0,0,0,.35); }
+    .scene-no { position: absolute; bottom: 58px; right: 80px; color: #9aabb5; font-size: 14px; letter-spacing: .18em; }
+    .brand-mini { position: absolute; top: 44px; left: 80px; color: rgba(230,241,247,.7); font-size: 21px; }
+    .scene1 { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+    .scene1 h1 { margin: 27px 0 18px; font-size: 112px; line-height: .98; }
+    .scene1 .second-line { color: #9fb2bf; font-style: italic; }
+    .scene1 p { font-size: 23px; letter-spacing: .02em; color:#b5c5cf; margin: 20px 0 0; }
+    .signal { width: 1050px; height: 130px; margin-top: 52px; opacity:.95; }
+    .signal line { stroke: rgba(212,230,240,.14); stroke-width:1; }
+    .scene2 { padding: 92px 126px 95px; }
+    .studio-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; }
+    .studio-title { font-size:42px; }
+    .studio-tabs { display:flex; gap:12px; align-items:center; }
+    .tag { border:1px solid rgba(230,241,247,.18); color:#bdcbd4; border-radius:999px; padding:11px 18px; font-size:15px; }
+    .tag.active { background:rgba(255,255,255,.08); color:#fff; }
+    .studio { height:655px; padding:30px; display:grid; grid-template-columns:1fr 420px; gap:26px; }
+    .studio-main { min-width:0; }
+    .preset { display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(230,241,247,.12); padding-bottom:20px; margin-bottom:24px; }
+    .preset-name { font-size:23px; color:#f1f5f9; }
+    .preset-sub { font-size:14px; color:#8fa5b5; margin-top:8px; }
+    .track-head { display:flex; justify-content:space-between; color:#8fa5b5; text-transform:uppercase; font-size:13px; letter-spacing:.16em; margin:18px 2px 10px; }
+    .track { height:70px; border-radius:14px; position:relative; overflow:hidden; display:flex; align-items:center; padding:0 18px; background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.08); }
+    .wave { position:absolute; inset:10px 16px; height:50px; width:calc(100% - 32px); opacity:.78; }
+    .wave path { fill:none; stroke-width:2.3; }
+    .wave .participant { stroke:#f8bd58; }
+    .wave .baseline { stroke:#67c7ee; }
+    .track-label { position:relative; z-index:1; background:rgba(3,19,30,.85); padding:6px 9px; border-radius:6px; font-size:12px; letter-spacing:.12em; }
+    .time-axis { display:flex; justify-content:space-between; color:#738998; font-size:12px; margin:8px 3px 23px; }
+    .transcript { border-top:1px solid rgba(230,241,247,.12); padding-top:18px; color:#aebec8; font-size:21px; line-height:1.7; }
+    .word-hit { color:#fff; border-bottom:2px solid #f8bd58; background:rgba(248,189,88,.13); padding:1px 3px; }
+    .studio-side { display:flex; flex-direction:column; gap:15px; }
+    .metric-card { padding:20px 22px; border-radius:16px; background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.09); }
+    .metric-title { color:#91a4b3; text-transform:uppercase; letter-spacing:.13em; font-size:12px; }
+    .metric-values { display:flex; align-items:baseline; gap:9px; margin-top:13px; }
+    .metric-values strong { font-size:29px; font-weight:500; }
+    .metric-values span { color:#8fa2af; font-size:15px; }
+    .deviation { color:#f8bd58; font-size:15px; margin-top:10px; }
+    .flaw { flex:1; padding:21px; background:rgba(248,189,88,.07); border:1px solid rgba(248,189,88,.25); border-radius:16px; }
+    .flaw h3 { font-weight:500; font-size:19px; margin:12px 0 9px; }
+    .flaw p { color:#b5c3cc; font-size:14px; line-height:1.55; margin:0; }
+    .flaw-time { color:#f8bd58; font-variant-numeric:tabular-nums; font-size:13px; letter-spacing:.07em; }
+    .scene3 { display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .scene3 .eyebrow { margin-bottom:25px; }
+    .quote-card { width:1240px; padding:49px 64px; }
+    .quote-card blockquote { font-family:'EB Garamond',Georgia,serif; font-size:57px; line-height:1.35; letter-spacing:-.015em; margin:0; color:#d7e2e9; }
+    .quote-card .word-hit { border-bottom-width:3px; }
+    .timecode { display:inline-flex; align-items:center; gap:12px; margin-top:38px; color:#f8bd58; font-size:17px; font-variant-numeric:tabular-nums; letter-spacing:.08em; }
+    .timecode::before { content:''; width:8px; height:8px; border-radius:99px; background:#f8bd58; box-shadow:0 0 18px rgba(248,189,88,.8); }
+    .metric-row { display:flex; gap:22px; margin-top:30px; }
+    .bigmetric { min-width:290px; padding:23px 30px; }
+    .bigmetric small { font-size:15px; color:#91a4b3; text-transform:uppercase; letter-spacing:.14em; }
+    .bigmetric strong { display:block; font-size:51px; font-weight:500; margin-top:9px; font-variant-numeric:tabular-nums; }
+    .bigmetric .source { display:block; color:#95a8b5; font-size:15px; margin-top:7px; }
+    .zscore { padding:19px 29px; border:1px solid rgba(248,189,88,.34); color:#f8bd58; border-radius:15px; font-size:25px; align-self:center; background:rgba(248,189,88,.07); }
+    .scene4 { display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
+    .scene4 h2 { font-size:68px; margin:23px 0 13px; }
+    .scene4 .sub { font-size:22px; color:#aabac5; margin:0 0 35px; }
+    .pause-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; width:960px; }
+    .pause-card { padding:28px 34px; text-align:left; }
+    .pause-card strong { display:block; font-size:49px; font-weight:500; margin-top:13px; }
+    .pause-card small { color:#8fa4b1; font-size:15px; letter-spacing:.1em; text-transform:uppercase; }
+    .scene4 .cause { margin-top:24px; width:960px; padding:20px 25px; text-align:left; color:#bdc9d1; font-size:18px; line-height:1.5; }
+    .scene4 .cause b { color:#f8bd58; font-weight:500; }
+    .scene5 { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+    .scene5 .rule { width:150px; height:1px; background:linear-gradient(90deg,transparent,#f8bd58,transparent); margin-bottom:35px; }
+    .scene5 h2 { font-size:91px; line-height:1.02; margin:0; }
+    .scene5 h2 em { color:#aabac5; font-style:italic; }
+    .scene5 .brand { margin-top:51px; font-family:'EB Garamond',Georgia,serif; font-size:38px; color:#f7f9fb; }
+    .scene5 .brand sup { font-family:Inter,Arial,sans-serif; font-size:12px; color:#95a8b5; vertical-align:top; margin-left:4px; }
+    .scene5 .descriptor { margin-top:12px; color:#91a4b3; font-size:15px; letter-spacing:.11em; text-transform:uppercase; }
+    .scene5 .footer-line { margin-top:35px; height:1px; width:570px; background:rgba(226,239,246,.16); }
+    .scene5 .hackathon { margin-top:19px; color:#9aadb9; font-size:14px; letter-spacing:.08em; }
+    .ambient { position:absolute; width:900px; height:900px; border-radius:50%; background:radial-gradient(circle,rgba(56,135,161,.10),transparent 65%); filter:blur(8px); left:510px; top:90px; pointer-events:none; }
+  </style>
+</head>
+<body>
+  <main id="root" data-composition-id="main" data-start="0" data-duration="22.5" data-width="1920" data-height="1080">
+    <div class="ambient"></div>
+    <section class="scene scene1">
+      <div class="eyebrow intro-label">Contrastive speech analytics</div>
+      <h1 class="serif intro-title">Same words.<br><span class="second-line">Different delivery.</span></h1>
+      <p class="intro-caption">Arachne measures the gap.</p>
+      <svg class="signal" viewBox="0 0 1050 130" aria-hidden="true">
+        <line x1="0" y1="65" x2="1050" y2="65" />
+        <path d="M0 66 L52 65 66 54 80 74 97 35 114 92 130 50 146 69 177 62 207 64 224 45 240 83 257 31 275 100 293 59 323 67 355 65 375 49 391 78 410 44 428 82 446 60 474 65 507 64 530 36 548 90 566 48 584 78 602 58 626 66 662 64 680 53 696 76 713 43 729 85 746 60 778 66 810 64 831 45 847 83 865 34 883 94 900 58 921 67 956 65 980 50 997 78 1016 44 1032 81 1050 64" fill="none" stroke="#67c7ee" stroke-width="2.4" opacity=".83"/>
+        <path d="M0 67 L55 65 70 57 86 71 103 42 120 88 138 52 154 69 184 63 213 65 230 50 246 78 264 37 282 94 300 59 330 67 359 65 381 54 397 75 416 48 434 79 451 61 478 65 512 64 534 42 551 87 570 51 588 76 606 59 630 66 665 64 685 56 701 74 718 47 734 81 751 61 782 66 815 64 836 51 852 77 870 42 888 90 905 58 925 67 960 65 985 54 1001 75 1020 47 1036 78 1050 65" fill="none" stroke="#f8bd58" stroke-width="2" opacity=".5"/>
+      </svg>
+      <span class="scene-no">01 / 05</span>
+    </section>
+    <section class="scene scene2">
+      <div class="brand-mini serif">Arachne</div>
+      <div class="studio-head"><div><div class="eyebrow">Interactive speech studio</div><div class="studio-title serif">Listen closer.</div></div><div class="studio-tabs"><span class="tag active">Participant</span><span class="tag">Baseline</span><span class="tag">Compare</span></div></div>
+      <div class="studio panel">
+        <div class="studio-main">
+          <div class="preset"><div><div class="eyebrow">Contrastive preset</div><div class="preset-name">Inaugural Address (“Ask Not”)</div><div class="preset-sub">John F. Kennedy (1961) vs. Flawed Mirror</div></div><div class="tag active">Tier 1 · Programmatic</div></div>
+          <div class="track-head"><span>Participant</span><span>18.0 s</span></div>
+          <div class="track"><span class="track-label">VOICE A</span><svg class="wave" viewBox="0 0 1100 50" preserveAspectRatio="none"><path class="participant" d="M0 26 L24 26 32 15 40 39 48 6 57 44 66 18 75 29 92 26 112 25 126 14 136 37 147 8 158 43 170 19 183 27 200 26 225 25 240 18 249 33 261 12 273 40 285 22 301 27 326 26 349 25 363 17 373 35 385 10 397 42 409 19 420 28 439 26 461 25 479 14 488 37 500 8 512 43 524 19 537 27 560 26 583 25 597 17 607 35 619 10 631 42 643 19 654 28 676 26 698 25 715 16 725 36 737 11 749 41 761 20 772 27 794 26 816 25 833 17 843 35 855 10 867 42 879 19 891 28 911 26 934 25 950 18 960 33 972 12 984 40 996 22 1008 27 1030 26 1052 25 1068 18 1078 33 1088 14 1100 26"/></svg></div>
+          <div class="track-head"><span>Baseline</span><span>Matched transcript</span></div>
+          <div class="track"><span class="track-label">VOICE B</span><svg class="wave" viewBox="0 0 1100 50" preserveAspectRatio="none"><path class="baseline" d="M0 26 L24 25 34 20 43 31 53 13 62 39 72 19 84 28 103 26 123 25 135 17 145 35 156 10 167 42 178 20 191 28 211 26 231 25 245 18 255 33 267 12 279 40 291 22 303 27 324 26 345 25 360 18 370 34 382 11 394 41 406 20 419 28 439 26 460 25 473 17 483 34 495 12 507 40 519 21 531 27 551 26 573 25 589 18 599 34 611 11 623 41 635 20 647 28 667 26 689 25 703 17 713 35 725 12 737 40 749 21 761 27 782 26 804 25 819 18 829 34 841 11 853 41 865 20 877 28 898 26 920 25 936 17 946 34 958 12 970 40 982 21 994 27 1015 26 1036 25 1052 18 1062 34 1075 12 1087 40 1100 26"/></svg></div>
+          <div class="time-axis"><span>00:00.0</span><span>00:04.5</span><span>00:09.0</span><span>00:13.5</span><span>00:18.0</span></div>
+          <div class="transcript">“And so my fellow Americans: ask not what your country can do for you — <span class="word-hit">ask what you can do</span> for your country.”</div>
+        </div>
+        <div class="studio-side">
+          <div class="metric-card"><div class="metric-title">Overall evaluation</div><div class="metric-values"><strong>61</strong><span>/ 100</span></div><div class="deviation">Critical flaw detected</div></div>
+          <div class="flaw"><div class="flaw-time">00:12.4 — 00:14.1</div><h3>Speech rate</h3><p>Delivery too fast for this passage. Pacing rate z-score exceeds +3.0σ during rhetorical antithesis climax.</p></div>
+          <div class="metric-card"><div class="metric-title">Grounded feedback</div><div class="metric-values"><strong class="amber">+3.42σ</strong></div><div class="deviation">Deterministic temporal flaw grounding</div></div>
+        </div>
+      </div>
+      <span class="scene-no">02 / 05</span>
+    </section>
+    <section class="scene scene3">
+      <div class="brand-mini serif">Arachne</div>
+      <div class="eyebrow">The exact moment</div>
+      <div class="quote-card panel">
+        <blockquote>“And so my fellow Americans: ask not what your country can do for you — <span class="word-hit">ask what you can do</span> for your country.”</blockquote>
+        <div class="timecode">00:12.4 — 00:14.1&nbsp;&nbsp; · &nbsp;&nbsp;SPEECH RATE DEVIATION</div>
+      </div>
+      <div class="metric-row">
+        <div class="bigmetric panel"><small>Participant</small><strong class="amber">212 wpm</strong><span class="source">Speech rate</span></div>
+        <div class="bigmetric panel"><small>Reference baseline</small><strong class="cyan">148 wpm</strong><span class="source">Same passage</span></div>
+        <div class="zscore">+43% above baseline&nbsp;&nbsp; · &nbsp;&nbsp;z = +3.42σ</div>
+      </div>
+      <span class="scene-no">03 / 05</span>
+    </section>
+    <section class="scene scene4">
+      <div class="brand-mini serif">Arachne</div>
+      <div class="eyebrow">What the comparison reveals</div>
+      <h2 class="serif">A pause can change the meaning.</h2>
+      <p class="sub">Matched text. Measurable delivery difference.</p>
+      <div class="pause-grid">
+        <div class="pause-card panel"><small>Participant pause</small><strong class="amber">280 ms</strong></div>
+        <div class="pause-card panel"><small>Reference pause</small><strong class="cyan">850 ms</strong></div>
+      </div>
+      <div class="cause panel">Rushed rhetorical caesura before the antithesis. <b>Preserve the pause</b> so the first proposition has time to register.</div>
+      <span class="scene-no">04 / 05</span>
+    </section>
+    <section class="scene scene5">
+      <div class="rule"></div>
+      <h2 class="serif">Replacing Subjectivity<br><em>with Mathematics.</em></h2>
+      <div class="brand">Arachne<sup>®</sup></div>
+      <div class="descriptor">Contrastive Speech Analytics &amp; Temporal Flaw Grounding</div>
+      <div class="footer-line"></div>
+      <div class="hackathon">MULTIMODAL AI HACKATHON 2026&nbsp;&nbsp; · &nbsp;&nbsp;TRACK C</div>
+      <span class="scene-no">05 / 05</span>
+    </section>
+    <audio id="bg-music" data-start="0" data-duration="22.5" data-track-index="10" data-volume="0.2" data-fade-in="0.8" data-fade-out="1.2" src="assets/music/happy-beats-business-moves-vol-12-by-ende-dot-app.mp3"></audio>
+    <audio id="sfx-reveal" data-start="2.55" data-duration="0.19" data-track-index="11" data-volume="0.42" src="assets/sfx/impactSoft_medium_001.ogg"></audio>
+    <audio id="sfx-hit" data-start="10.9" data-duration="0.13" data-track-index="12" data-volume="0.34" src="assets/sfx/bong_001.ogg"></audio>
+    <audio id="sfx-outro" data-start="19.35" data-duration="0.15" data-track-index="13" data-volume="0.38" src="assets/sfx/impactSoft_medium_004.ogg"></audio>
+  </main>
+  <script>
+    const root = document.querySelector('[data-composition-id="main"]');
+    const id = root.dataset.compositionId;
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo('.scene2', { opacity: 0 }, { opacity: 1, duration: .42 }, 2.6);
+    tl.to('.scene1', { opacity: 0, duration: .34 }, 2.24);
+    tl.fromTo('.scene3', { opacity: 0 }, { opacity: 1, duration: .42 }, 6.5);
+    tl.to('.scene2', { opacity: 0, duration: .34 }, 6.16);
+    tl.fromTo('.scene4', { opacity: 0 }, { opacity: 1, duration: .4 }, 15.7);
+    tl.to('.scene3', { opacity: 0, duration: .32 }, 15.38);
+    tl.fromTo('.scene5', { opacity: 0 }, { opacity: 1, duration: .42 }, 19.4);
+    tl.to('.scene4', { opacity: 0, duration: .32 }, 19.08);
+    tl.fromTo('.intro-label', { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: .55, ease: 'power2.out' }, .12);
+    tl.fromTo('.intro-title', { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: .8, ease: 'power3.out' }, .32);
+    tl.fromTo('.intro-caption', { opacity: 0 }, { opacity: 1, duration: .5 }, 1.15);
+    tl.fromTo('.signal', { opacity: 0, scaleX: .82 }, { opacity: .95, scaleX: 1, duration: .75, ease: 'power2.out' }, .7);
+    tl.fromTo('.studio-head', { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: .45 }, 2.72);
+    tl.fromTo('.studio', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: .7, ease: 'power2.out' }, 2.92);
+    tl.fromTo('.scene2 .word-hit', { backgroundColor: 'rgba(248,189,88,0)' }, { backgroundColor: 'rgba(248,189,88,.13)', duration: .5 }, 4.65);
+    tl.fromTo('.scene3 .eyebrow', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: .5 }, 6.72);
+    tl.fromTo('.quote-card', { opacity: 0, y: 20, scale: .985 }, { opacity: 1, y: 0, scale: 1, duration: .65, ease: 'power2.out' }, 6.98);
+    tl.fromTo('.metric-row', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .65, ease: 'power2.out' }, 9.65);
+    tl.fromTo('.scene3 .word-hit', { backgroundColor: 'rgba(248,189,88,0)' }, { backgroundColor: 'rgba(248,189,88,.13)', duration: .4 }, 8.55);
+    tl.fromTo('.scene4 .eyebrow, .scene4 h2, .scene4 .sub', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: .5, stagger: .12, ease: 'power2.out' }, 15.9);
+    tl.fromTo('.pause-card', { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: .45, stagger: .16, ease: 'power2.out' }, 16.55);
+    tl.fromTo('.cause', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .45 }, 17.15);
+    tl.fromTo('.scene5 .rule, .scene5 h2, .scene5 .brand, .scene5 .descriptor, .scene5 .footer-line, .scene5 .hackathon', { opacity: 0, y: 13 }, { opacity: 1, y: 0, duration: .45, stagger: .12, ease: 'power2.out' }, 19.55);
+    tl.to('.ambient', { opacity: .72, duration: 1.4, ease: 'sine.inOut' }, 20.45);
+    window.__timelines[id] = tl;
+  </script>
+</body>
+</html>
