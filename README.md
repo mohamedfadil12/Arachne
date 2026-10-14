@@ -1,23 +1,30 @@
-<div align="center">
+<p align="center">
+  <img src="banner.png" alt="Arachne" width="100%">
+</p>
 
-<img src="banner.png" alt="Arachne" width="100%" />
+<h3 align="center">Replace subjective speech judging with reproducible, explainable measurements.</h3>
 
-[Youtube](https://www.youtube.com/@Arachne-w8c)
+<p align="center">
+  <a href="https://arachne-blush.vercel.app"><b>Live demo</b></a> ·
+  <a href="#-quick-start">Quick start</a> ·
+  <a href="#-how-it-works">How it works</a> ·
+  <a href="#-dashboard">Dashboard</a> ·
+  <a href="#-api">API</a> ·
+  <a href="#-rubric">Rubric</a> ·
+  <a href="#-results">Results</a> ·
+  <a href="#-limitations--honesty-notes">Limitations</a> ·
+  <a href="#-team">Team</a>
+</p>
 
-**Replace subjective speech judging with reproducible, explainable measurements.**
-
-![Track](https://img.shields.io/badge/Multimodal%20AI%20Hackathon%202026-Track%20C-6366f1?style=for-the-badge)
-![Python](https://img.shields.io/badge/python-3.12-3776AB?style=flat-square&logo=python&logoColor=white)
-![API](https://img.shields.io/badge/API-FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-9%20passing-2ea44f?style=flat-square)
-![Deterministic](https://img.shields.io/badge/output-deterministic-0ea5e9?style=flat-square)
-![Scoring](https://img.shields.io/badge/scoring-no%20LLM%20·%20rule--based-f59e0b?style=flat-square)
-![Status](https://img.shields.io/badge/backend-complete-2ea44f?style=flat-square)
-![Dashboard](https://img.shields.io/badge/dashboard-in%20progress-lightgrey?style=flat-square)
-
-[Quick start](#-quick-start) · [How it works](#-how-it-works) · [API](#-api) · [Rubric](#-rubric) · [Results](#-results) · [Limitations](#-limitations--honesty-notes) · [Roadmap](#-roadmap)
-
-</div>
+<p align="center">
+  <img alt="Track" src="https://img.shields.io/badge/Multimodal%20AI%20Hackathon%202026-Track%20C-6366f1?style=for-the-badge">
+  <img alt="Python" src="https://img.shields.io/badge/python-3.12-3776AB?style=flat-square&logo=python&logoColor=white">
+  <img alt="API" src="https://img.shields.io/badge/API-FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white">
+  <img alt="Dashboard" src="https://img.shields.io/badge/dashboard-React%20%2B%20Vite-61DAFB?style=flat-square&logo=react&logoColor=black">
+  <img alt="Deterministic" src="https://img.shields.io/badge/output-deterministic-0ea5e9?style=flat-square">
+  <img alt="Scoring" src="https://img.shields.io/badge/scoring-no%20LLM%20%C2%B7%20rule--based-f59e0b?style=flat-square">
+  <img alt="Status" src="https://img.shields.io/badge/status-hackathon%20prototype-2ea44f?style=flat-square">
+</p>
 
 ---
 
@@ -30,14 +37,9 @@ Every finding names the *measured feature*, the *comparison*, the *time span* an
 > **What Arachne claims and doesn't.** A flagged region is a measurable difference from one chosen reference, tied to an explicit rule.
 > It is **not** proof of a "wrong" delivery, of the speaker's intent, or of any cause.
 
-<table>
-<tr>
-<td width="25%"><b>🎯 Temporal grounding</b><br/>Start/end timestamps for every deviation, mapped to words.</td>
-<td width="25%"><b>🧮 Deterministic</b><br/>Robust z-scores and explicit rules. Same input + config = same output.</td>
-<td width="25%"><b>🗣️ Speaker-agnostic</b><br/>Pitch in semitones re speaker median; energy median-centred.</td>
-<td width="25%"><b>🔍 Traceable</b><br/>Config hash, rubric version and rule IDs in every result.</td>
-</tr>
-</table>
+| 🎯 **Temporal grounding** | 🧮 **Deterministic** | 🗣️ **Speaker-agnostic** | 🔍 **Traceable** |
+| --- | --- | --- | --- |
+| Start/end timestamps for every deviation, mapped to words. | Robust z-scores and explicit rules. Same input + config = same output. | Pitch in semitones re speaker median; energy median-centred. | Config hash, rubric version and rule IDs in every result. |
 
 ## 🧭 How it works
 
@@ -51,18 +53,31 @@ flowchart LR
     E --> F[Rubric rules<br/>4 detectors]
     F --> G[Regions + scores<br/>+ explanations]
     G --> H{{JSON API}}
-    H -.-> I[Dashboard<br/>in progress]
+    H --> I[React dashboard]
 ```
 
 | Stage | Module | What it does |
-|---|---|---|
+| --- | --- | --- |
 | 1. Input | `audio_io.py` | Decodes/validates audio; clear error codes for unsupported, short, silent or mismatched input. |
 | 2. Alignment | `align.py` | Default `proportional` backend: silence chunking → reference-prior DP word assignment → energy-valley Viterbi boundaries. Optional `whisperx` backend (see limitations). |
 | 3. Features | `features.py` | Energy (dB), F0 via Praat autocorrelation, semitones re speaker median, per-word and pause features. |
 | 4. Comparison | `compare.py` | Four deterministic detectors on matched words with MAD-based robust z-scores. |
 | 5. Scoring | `scoring.py` | Per-dimension and overall score; returns **insufficient evidence** instead of guessing when SNR, voicing or alignment are inadequate. |
+| 6. Dashboard | `src/` | React + Vite front end that calls the JSON API and renders playback, overlays and explanation cards. |
+
+## 🖥️ Dashboard
+
+The dashboard is built against the real API schema (no separate mock contract) and is live at **[arachne-blush.vercel.app](https://arachne-blush.vercel.app)**.
+
+- Upload an audio file and transcript, and pick a same-text reference.
+- Clear validation and processing states, including `insufficient_evidence` and error messages.
+- Audio playback with the transcript, aligned word by word.
+- Baseline-vs-performance time-series overlays with flagged regions highlighted.
+- Explanation cards showing the rule ID, measured values, delta, z-score and time span.
 
 ## 🚀 Quick start
+
+### 1. Engine and API
 
 ```bash
 # prerequisites: Python 3.12, ffmpeg; espeak-ng only to build the dev dataset
@@ -76,7 +91,15 @@ make stress      # writes results/stress.md
 make serve       # API on http://127.0.0.1:8000
 ```
 
-Analyze one recording from the command line:
+### 2. Dashboard
+
+```bash
+# prerequisites: Bun (or Node 20+)
+bun install
+bun run dev      # Vite dev server; point it at the API above
+```
+
+### 3. Command line
 
 ```bash
 python -m arachne analyze my_speech.wav \
@@ -90,7 +113,7 @@ The reference id is a folder under `dataset/references/<id>/` containing `refere
 ## 🔌 API
 
 | Method | Endpoint | Purpose |
-|---|---|---|
+| --- | --- | --- |
 | `GET` | `/health` | Engine version, schema version, config hash |
 | `GET` | `/references` | Selectable references (id, title, transcript, provenance) |
 | `GET` | `/rubric` | Rule definitions and standing limitations |
@@ -99,10 +122,9 @@ The reference id is a folder under `dataset/references/<id>/` containing `refere
 `POST /analyze` returns `200` with `status` = `ok` or `insufficient_evidence`; invalid input returns `422` with machine-readable `messages`.
 Full field reference: [`docs/schema.md`](docs/schema.md).
 
-<details>
-<summary><b>Example region (format)</b></summary>
+**Example region (format)**
 
-```jsonc
+```json
 {
   "rule_id": "PAUSE-1",
   "dimension": "pauses",
@@ -118,15 +140,15 @@ Full field reference: [`docs/schema.md`](docs/schema.md).
   "explanation": "After word 31 ('...'): pause of 1.87s vs 0.06s in the reference (+1.81s longer). Rule PAUSE-1 (z=18.1)."
 }
 ```
+
 Values are illustrative of the format.
-</details>
 
 ## 📏 Rubric
 
 Every rule specifies feature, normalization, window, threshold and feedback template (`arachne/rubric.py`).
 
 | Rule | Dimension | Feature | Fires when |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `PACE-1` | Pacing | Articulation time per 3-word window (pauses excluded), relative to the utterance-wide pace ratio | robust z ≥ 2.5 and ≥ ~22% over ≥ 3 words |
 | `PAUSE-1` | Pauses | Silent gap after word | ≥ 0.30 s longer than reference and z ≥ 2.5 |
 | `PAUSE-2` | Pauses | Silent gap after word | reference pause ≥ 0.25 s and participant ≤ 40% of it |
@@ -142,7 +164,7 @@ Overall score is a weighted mean of dimension scores (pacing 0.30, pauses 0.20, 
 **Held-out speeches** (2 speeches, 42 items; thresholds were not tuned on them). Label tolerance: exact by construction.
 
 | Dimension | Ground-truth spans | Recall @ IoU 0.3 | Recall @ IoU 0.5 | Mean IoU (matched) |
-|---|---:|---:|---:|---:|
+| --- | ---: | ---: | ---: | ---: |
 | Pacing | 14 | 0.86 | 0.86 | 0.92 |
 | Pauses | 20 | 1.00 | 1.00 | 0.95 |
 | Pitch contour | 8 | 0.88 | 0.88 | 0.66 |
@@ -152,11 +174,10 @@ Overall score is a weighted mean of dimension scores (pacing 0.30, pauses 0.20, 
 - Severity ordering (dimension score falls as severity rises): **12 / 12** series.
 - Pitch boundaries are loose (mean absolute boundary error ≈ 0.7 s); pacing and energy are tighter.
 
-<details>
-<summary><b>Stress test (1 speech, 21 items)</b></summary>
+**Stress test (1 speech, 21 items)**
 
 | Variant | Outcome |
-|---|---|
+| --- | --- |
 | MP3 round-trip (48 kbps → 44.1 kHz) | Unchanged vs clean |
 | 3 s added lead/trail silence | Unchanged vs clean |
 | Noise 30 dB SNR | Pause recall 0.8, 5 false-positive regions |
@@ -164,28 +185,28 @@ Overall score is a weighted mean of dimension scores (pacing 0.30, pauses 0.20, 
 | Noise 10 dB SNR | **Degrades**: 27 false-positive regions; noise warning raised |
 
 Treat noisy recordings as unsupported until the speech/pause detector and SNR estimate are improved. Details: `results/stress.md`.
-</details>
 
 ## 🗂️ Dataset
 
 Each speech has 21 items: 2 near-perfect mirrors (same / different speaker, with natural-variation jitter), 6 single-factor flaw families × 3 severities
 (`pace_fast`, `pace_slow`, `pause_excess`, `pause_missing`, `pitch_flat`, `energy_quiet`), and 1 three-flaw combo.
 Texts are short excerpts of public-domain US speeches (Gettysburg Address, Second Inaugural, FDR First Inaugural).
-Each manifest row carries transcript, voice, flaw type/severity, ground-truth spans, format and provenance, labelled
-`exact_by_construction; not human-reviewed`. See [`docs/dataset.md`](docs/dataset.md).
+Each manifest row carries transcript, voice, flaw type/severity, ground-truth spans, format and provenance, labelled `exact_by_construction; not human-reviewed`. See [`docs/dataset.md`](docs/dataset.md).
 
 ## 🧱 Project structure
 
-```text
-arachne/
-├── arachne/          # audio_io · align · features · compare · rubric · scoring · pipeline · api · evaluate · stress · dataset
-├── data/             # source speech texts
+```
+Arachne/
+├── backend/          # Python engine + API: audio_io · align · features · compare · rubric · scoring · pipeline · api
+├── src/              # React dashboard (Vite + TypeScript)
+├── dataset/          # contrastive dataset: references, mirrors, manifest
+├── eval/             # evaluation and stress-test harness
 ├── docs/             # schema.md · dataset.md
-├── results/          # evaluation + stress outputs
-├── tests/            # pytest suite
-├── frontend/         # dashboard (in progress, built against the API)
-├── Makefile
-└── requirements.txt
+├── Instructions/     # Plan.md · role instructions · design spec
+├── server.ts         # dev/server entry for the web app
+├── index.html · vite.config.ts · package.json · bun.lock
+├── IDEA.md · metadata.json · banner.png
+└── README.md
 ```
 
 ## ⚠️ Limitations & honesty notes
@@ -202,26 +223,57 @@ arachne/
 - [x] Evidence-linked explanations with rule IDs
 - [x] Synthetic contrastive dataset + evaluation + stress harness
 - [x] REST API and result schema
-- [ ] Dashboard (audio upload, playback, time-series overlays, explanation cards)
+- [x] React dashboard (audio upload, playback, time-series overlays, explanation cards), deployed on Vercel
 - [ ] Real public-domain baselines with verified reuse terms
 - [ ] Human re-recordings and human-reviewed alignment/flaw labels
 - [ ] WhisperX forced alignment validated on real audio
 - [ ] Noise-robust speech/pause detection and SNR estimate
-- [ ] Six-page technical document and demo video
 
 ## 🤖 AI assistance disclosure
 
-Parts of this repository (pipeline code, tests and documentation) were written with assistance from **Claude (Anthropic)**.
-This is also listed under *Built With* on the Devpost page.
+Parts of this repository (pipeline code, dashboard, tests and documentation) were written with assistance from AI tools: **Claude (Anthropic)**, **ChatGPT (OpenAI)**, **Gemini (Google)** and **Cursor**.
+All AI-assisted output was reviewed by the team. The same tools are listed under *Built With* on the Devpost page.
 
 ## 👥 Team
 
-| Name | Role |
-|---|---|
-| [Fadil](https://github.com/mohamedfadil12), [Abdul](https://github.com/Abdude69), [Ammar](https://github.com/mdammar56), [Rihan](https://github.com/HABIBEEYY) | Dataset & annotation · Audio & features · Scoring & evaluation · Dashboard & submission |
+**Team Kelambakkam Atti** · Multimodal AI Hackathon 2026, Track C
 
-<div align="center">
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <a href="https://github.com/mdammar56"><b>Ammar</b></a><br>
+      <sub>@mdammar56</sub><br><br>
+      <b>Dataset Lead</b><br>
+      <sub>Source speeches, contrastive dataset (references and flawed mirrors), provenance, annotation and labels.</sub>
+    </td>
+    <td align="center" width="25%">
+      <a href="https://github.com/Abdude69"><b>Abdul</b></a><br>
+      <sub>@Abdude69</sub><br><br>
+      <b>Signal Processing Lead</b><br>
+      <sub>Audio validation, alignment, F0 / energy / pause feature extraction, speaker-agnostic normalization.</sub>
+    </td>
+    <td align="center" width="25%">
+      <a href="https://github.com/HABIBEEYY"><b>Rihan</b></a><br>
+      <sub>@HABIBEEYY</sub><br><br>
+      <b>Grounding &amp; Scoring Lead</b><br>
+      <sub>Robust z-score model, rubric rules, temporal flaw grounding, explanations, IoU and boundary-error evaluation.</sub>
+    </td>
+    <td align="center" width="25%">
+      <a href="https://github.com/mohamedfadil12"><b>Mohamed Fadil</b></a><br>
+      <sub>@mohamedfadil12</sub><br><br>
+      <b>Dashboard &amp; Delivery Lead</b><br>
+      <sub>React dashboard, API integration, README and technical document, demo video, Devpost submission.</sub>
+    </td>
+  </tr>
+</table>
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:6366f1,100:0f172a&height=90&section=footer" alt="" />
+| Member | GitHub | Role | Primary ownership |
+| --- | --- | --- | --- |
+| Ammar | [@mdammar56](https://github.com/mdammar56) | Dataset Lead | `dataset/`, `docs/dataset.md`, annotation guide |
+| Abdul | [@Abdude69](https://github.com/Abdude69) | Signal Processing Lead | `audio_io`, `align`, `features` |
+| Rihan | [@HABIBEEYY](https://github.com/HABIBEEYY) | Grounding & Scoring Lead | `compare`, `rubric`, `scoring`, `eval/` |
+| Mohamed Fadil | [@mohamedfadil12](https://github.com/mohamedfadil12) | Dashboard & Delivery Lead | `src/`, README, docs, Devpost |
 
-</div>
+---
+
+<p align="center"><sub>Built for the Multimodal AI Hackathon 2026 · Track C: Contrastive Speech Analytics and Temporal Flaw Grounding</sub></p>
