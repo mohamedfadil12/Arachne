@@ -6,6 +6,7 @@
 
 <p align="center">
   <a href="https://arachne-blush.vercel.app"><b>Live demo</b></a> ·
+  <a href="https://youtu.be/MD4yqxJsxXA"><b>Demo video</b></a> ·
   <a href="#-quick-start">Quick start</a> ·
   <a href="#-how-it-works">How it works</a> ·
   <a href="#-dashboard">Dashboard</a> ·
@@ -23,10 +24,17 @@
   <img alt="Dashboard" src="https://img.shields.io/badge/dashboard-React%20%2B%20Vite-61DAFB?style=flat-square&logo=react&logoColor=black">
   <img alt="Deterministic" src="https://img.shields.io/badge/output-deterministic-0ea5e9?style=flat-square">
   <img alt="Scoring" src="https://img.shields.io/badge/scoring-no%20LLM%20%C2%B7%20rule--based-f59e0b?style=flat-square">
+  <a href="https://youtu.be/MD4yqxJsxXA"><img alt="Demo video" src="https://img.shields.io/badge/demo-YouTube-FF0000?style=flat-square&logo=youtube&logoColor=white"></a>
   <img alt="Status" src="https://img.shields.io/badge/status-hackathon%20prototype-2ea44f?style=flat-square">
 </p>
 
 ---
+
+## 🎬 Demo video
+
+[![Arachne demo video](https://img.youtube.com/vi/MD4yqxJsxXA/maxresdefault.jpg)](https://youtu.be/MD4yqxJsxXA)
+
+Watch the full walkthrough on YouTube: **<https://youtu.be/MD4yqxJsxXA>**. It shows the dashboard running, the contrastive dataset, the rubric, the evaluation and the stress tests.
 
 ## Why Arachne?
 
@@ -219,11 +227,19 @@ Arachne/
 
 ## 🛣️ Roadmap
 
+**Delivered**
+
 - [x] Deterministic pipeline: alignment, features, four rubric detectors, scoring
 - [x] Evidence-linked explanations with rule IDs
 - [x] Synthetic contrastive dataset + evaluation + stress harness
 - [x] REST API and result schema
 - [x] React dashboard (audio upload, playback, time-series overlays, explanation cards), deployed on Vercel
+- [x] Technical document and README
+- [x] [Demo video](https://youtu.be/MD4yqxJsxXA) (YouTube)
+- [x] Devpost submission
+
+**Next steps after the hackathon**
+
 - [ ] Real public-domain baselines with verified reuse terms
 - [ ] Human re-recordings and human-reviewed alignment/flaw labels
 - [ ] WhisperX forced alignment validated on real audio
